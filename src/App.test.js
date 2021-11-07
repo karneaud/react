@@ -1,7 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
+import renderWithRouter from "./setupTests";
 import App from './App';
 
-test('test is at route', () => {
- renderWithRouter(<App />);
- expect(screen.getByText(/list/i)).toBeInTheDocument();
+describe('test app component' , () => {
+	test('should be at /', () => {
+ 		renderWithRouter(<App />);
+ 		expect(screen.getByText(/list/i)).toBeInTheDocument();
+	});
 });
