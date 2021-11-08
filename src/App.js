@@ -41,6 +41,7 @@ class App extends React.Component {
                			<CategoryMenu items={ this.state.items.map(item => item.name ) } />
   					</ul>
   				</nav>
+  				<section>
 				 <Router>
     				<Suspense fallback={<div>Loading...</div>}>
       					<Routes>
@@ -48,6 +49,7 @@ class App extends React.Component {
                             </Routes>
     					</Suspense>
   					</Router> 	
+                   </section>
            	 	 </React.Fragment>
 				);
 			} else {
