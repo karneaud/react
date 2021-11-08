@@ -33,21 +33,26 @@ class App extends React.Component {
   }
 
   render() { 
-  	return (
-    		<main>
-    			{ this.state.items.length > 0?  
-                <div>
-                 <CategoryMenu items={ this.state.items.map(item => item.name ) } />
-   	 			<Router>
+  		if(this.state.items && this.state.items.length > 0) {
+    		 return ( 
+             <React.Fragment>
+             	<nav>
+             		<ul>
+               			<CategoryMenu items={ this.state.items.map(item => item.name ) } />
+  					</ul>
+  				</nav>
+				 <Router>
     				<Suspense fallback={<div>Loading...</div>}>
       					<Routes>
         					<Route exact path="/" element={ <ProductList items={ this.state.items.find(item => item.name == this.state.category ).products } /> } />
-      					</Routes>
-    				</Suspense>
-  				</Router> 
-				</div> : <div><h1>No Data!</h1></div> } 
-    		</main> 
-    	);
+                            </Routes>
+    					</Suspense>
+  					</Router> 	
+           	 	 </React.Fragment>
+				);
+			} else {
+            	return ( <section><article><h1>No Data!</h1></article></section> );
+            }
 	}
 }
 
