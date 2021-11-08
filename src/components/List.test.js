@@ -5,14 +5,14 @@ const data = [{"name":"Nike Air Huarache Le","prices":[{"currency":"USD","amount
 
 
 describe('test list component', () => {
-	test('should be list component', async () => {
+	test('should be list component with no data', () => {
  		render(<List items={ [] } />);
- 		expect(screen.getByText('List')).toBeInTheDocument();
+ 		expect(screen.getByText('No Data')).toBeInTheDocument();
 	});
 
-	test('should have items property', async () => {
+	test('should contain product data name', () => {
     	render(<List items={ data } />);
- 		 expect(await screen.getByText('Nike Air Huarache Le')).toBeInTheDocument();
+ 		 expect(screen.getByText('Nike Air Huarache Le')).toBeInTheDocument();
     });
 })
 
