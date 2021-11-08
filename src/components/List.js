@@ -4,8 +4,7 @@ class List extends React.Component {
 	
   render() { 
   	return (
-   	 	<section>
-    		<article>
+   	 	<article>
     		<ol>{ 
             	this.props.items && this.props.items.length > 0? 
             		this.props.items.map( (item, k) => 
@@ -13,7 +12,6 @@ class List extends React.Component {
 								<h1>{ item.name }</h1>
 							</li>) ) : <li>No Data</li> }</ol>
     		</article>
-		</section>
   	  ); 
 	}
 }
