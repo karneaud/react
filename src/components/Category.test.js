@@ -14,8 +14,8 @@ describe('test category component', () => {
 	test('should return category name onCategorySelected', () => {
     	const testCategorySelected = jest.fn(),
               { container } = render(<Category onCategorySelected={ testCategorySelected } />, { wrapper: Category } );
-        	waitFor(async () => {
-    			await fireEvent.click(screen.getByText('tech'));
+        	fireEvent.click(screen.getByText('tech'))
+    		waitFor(() => {
     			expect(testCategorySelected).toHaveBeenCalledTimes(1);
 				expect(testCategorySelected).toHaveBeenCalledWith('tech');
 				expect(container.querySelector('.selected')).toBeTruthy();
