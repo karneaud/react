@@ -10,7 +10,8 @@ class List extends React.Component {
             		this.props.items.map( (item, k) => 
     						(<li key={ `product-item-${k}` }>
 								<h1>{ item.name }</h1>
-							</li>) ) : <li>No Data</li> }</ol>
+								<p></p>
+							</li>) ) : <li>No Products</li> }</ol>
     		</article>
   	  ); 
 	}
