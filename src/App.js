@@ -3,58 +3,55 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import ProductList from './components/List.js';
 import CategoryMenu from './components/Category.js';
-import { client, Query, Field, InlineFragment } from '@tilework/opus';
+import { client, Query, Field, Mutation } from '@tilework/opus';
 
 client.setEndpoint(process.env.REACT_APP_GRAPHQL_ENDPOINT);
-
-const productQuery = new Query('categories', true) // `true` means 'expect array'
-		.addFieldList( ['name'] )
-    	.addField(new Field('products')
-         	.addFieldList( ['name'] )
-                  .addField(new Field('prices').addFieldList(['currency','amount']))
-    	);
 
 class App extends React.Component {
 
 	constructor(props) {
     	super(props)
-    	this.state = { items: [], category: null }
+    	this.state = { items: [] }
     }
-
-  componentDidMount() {
-  	this.fetchData(productQuery).then((data) => {
-    	let items = data.categories, category = items[0].name;
-  		this.setState({ items, category });
-    }).catch(e => console.log(e))
-  }
 
   fetchData(query) {
   	return client.post(query)
   }
 
+  listProductsOfCategory(title) {
+  	const productQuery = new Query('category', true) 
+    	.addArgument('input', 'CategoryInput', {title })
+		.addFieldList( ['name'] )
+    	.addField(new Field('products')
+         	.addFieldList( ['name'] )	
+                  .addField(new Field('prices').addFieldList(['currency','amount']))
+    	);
+  	this.fetchData(productQuery).then((data) => {
+    	let items = data.category.products;
+  		this.setState({ items });
+    }).catch(e => console.log(e));
+  }
+
   render() { 
-  		if(this.state.items && this.state.items.length > 0) {
+  		
     		 return ( 
              <React.Fragment>
              	<nav>
              		<ul>
-               			<CategoryMenu items={ this.state.items.map(item => item.name ) } />
+               			<CategoryMenu onCategorySelected={ this.listProductsOfCategory.bind(this) } />
   					</ul>
   				</nav>
   				<section>
 				 <Router>
     				<Suspense fallback={<div>Loading...</div>}>
       					<Routes>
-        					<Route exact path="/" element={ <ProductList items={ this.state.items.find(item => item.name == this.state.category ).products } /> } />
+        					<Route exact path="/" element={ <ProductList items={ this.state.items } /> } />
                             </Routes>
     					</Suspense>
   					</Router> 	
                    </section>
            	 	 </React.Fragment>
 				);
-			} else {
-            	return ( <section><article><h1>No Data!</h1></article></section> );
-            }
 	}
 }
 
