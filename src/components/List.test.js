@@ -7,7 +7,7 @@ const data = [{"name":"Nike Air Huarache Le","prices":[{"currency":"USD","amount
 describe('test list component', () => {
 	test('should be list component with no data', () => {
  		render(<List items={ [] } />);
- 		expect(screen.getByText('No Data')).toBeInTheDocument();
+ 		expect(screen.getByText('No Products')).toBeInTheDocument();
 	});
 
 	test('should contain product data name', () => {
