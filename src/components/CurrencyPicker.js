@@ -1,5 +1,6 @@
 import React from 'react';
-import { client, Query, Field } from '@tilework/opus';
+import { client, Query } from '@tilework/opus';
+import { set } from '../state';
 
 const query = new Query('currencies', true);
 
@@ -7,35 +8,32 @@ class CurrencyPicker extends React.PureComponent {
   
 	constructor(props) {
     	super(props);
-    	this.state = { items: [], selected: null };
+    	this.state = { items: [], currency: null };
    }
 
-	selectCurrency(selected) {
-    	this.setState({ selected });
+	selectCurrency(currency) {
+		this.setState({ currency });
     }
+
+	componentDidUpdate(p, s) {
+		if(s.currency !== this.state.currency ) set({ currency: this.state.currency })
+	}
 
 	componentDidMount() {
   		client.post(query).then((data) => {
-    		let items = data.currencies, currency = items[0].name;
-  			this.setState({ items, selected: currency });
+    		let items = data.currencies, currency = items[0];
+  			this.setState({ items, currency });
     	}).catch(e => console.log(e))
   	}
-	
-	componentDidUpdate(p, s) {
-    	if((s.selected != this.state.selected) && 
-           this.props.onCurrencySelected) this.props.onCurrencySelected(this.state.selected);
-    }
-	
-	
 
    render() { 
   	return (
-    	<select onChange={ this.selectCurrency }>
-    		<option>Select Currency</option>
-   	 	if( this.state.items && this.state.items.length > 0 ) {
+    	<select id="currencyPicker" defaultValue={ this.state.currency } onChange={ (e) => this.selectCurrency(e.currentTarget.value) }>
+    		<option value>Select Currency</option>
+   	 	if( this.state.items && (this.state.items.length > 0) ) {
                  	this.state.items.map( 
                  			(item, k) => 
-    							(<option className={ `curency-menu-item ${ this.state.selected == item? 'selected' : ''  }`  }  key={ `currency-menu-item-${k}` }>{ item }</option>) )
+    							(<option value={ item } key={ `currency-menu-item-${k}` }>{ item }</option>) )
 			}
 			</select>
   	  ); 
