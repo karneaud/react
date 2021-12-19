@@ -1,9 +1,11 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import ProductList from './components/List.js';
-import CategoryMenu from './components/Category.js';
-import { client, Query, Field, Mutation } from '@tilework/opus';
+import ProductList from './components/List';
+import CategoryMenu from './components/Category';
+import CurrencyMenu from './components/CurrencyPicker';
+import { client, Query, Field } from '@tilework/opus';
+import { subscribe } from './state';
 
 client.setEndpoint(process.env.REACT_APP_GRAPHQL_ENDPOINT);
 
@@ -11,11 +13,18 @@ class App extends React.Component {
 
 	constructor(props) {
     	super(props)
-    	this.state = { items: [] }
+    	this.state = { items: [], category: null }
     }
 
   fetchData(query) {
   	return client.post(query)
+  }
+
+  componentDidMount() {
+	  subscribe(
+		  (s) => {
+			  if(s.category) this.listProductsOfCategory(s.category)
+		  });
   }
 
   listProductsOfCategory(title) {
@@ -38,9 +47,12 @@ class App extends React.Component {
              <React.Fragment>
              	<nav>
              		<ul>
-               			<CategoryMenu onCategorySelected={ this.listProductsOfCategory.bind(this) } />
+               			<CategoryMenu />
   					</ul>
   				</nav>
+				  <nav>
+             		<CurrencyMenu />
+  				  </nav>
   				<section>
 				 <Router>
     				<Suspense fallback={<div>Loading...</div>}>
