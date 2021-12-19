@@ -1,4 +1,5 @@
 import React from 'react';
+import PriceList from './Prices';
 
 class List extends React.Component {
 	
@@ -10,7 +11,7 @@ class List extends React.Component {
             		this.props.items.map( (item, k) => 
     						(<li key={ `product-item-${k}` }>
 								<h1>{ item.name }</h1>
-								<p></p>
+								<PriceList items={ item.prices } />
 							</li>) ) : <li>No Products</li> }</ol>
     		</article>
   	  ); 
