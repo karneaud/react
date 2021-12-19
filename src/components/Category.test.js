@@ -12,12 +12,17 @@ describe('test category component', () => {
     });
 
 	test('should return category name onCategorySelected', () => {
-    	const testCategorySelected = jest.fn(),
-              { container } = render(<Category onCategorySelected={ testCategorySelected } />, { wrapper: Category } );
+		const set = jest.fn();
+		Category.prototype.componentDidUpdate = function(p, s){
+			if(s.category !== this.state.category) set({  category: this.state.category })
+		}
+    	
+        const{ container } = render(<Category />, { wrapper: Category } );
+
         	fireEvent.click(screen.getByText('tech'))
     		waitFor(() => {
-    			expect(testCategorySelected).toHaveBeenCalledTimes(1);
-				expect(testCategorySelected).toHaveBeenCalledWith('tech');
+    			expect(set).toHaveBeenCalledTimes(1);
+				expect(set).toHaveBeenCalledWith('tech');
 				expect(container.querySelector('.selected')).toBeTruthy();
     		});
     });
